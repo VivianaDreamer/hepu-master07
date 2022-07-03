@@ -1,0 +1,78 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Results {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+            <!-- [ breadcrumb ] start -->
+            <div class="page-header">
+                <div class="page-block">
+                    <div class="row align-items-center">
+                        <div class="col-md-12">
+                            <div class="page-header-title">
+                                <h5 class="m-b-10">Results</h5>
+                            </div>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="feather icon-home"></i></a></li>
+                                <li class="breadcrumb-item"><a href="">Results</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ breadcrumb ] end -->
+            <div class="main-body">
+                <div class="page-wrapper">
+                    <!-- [ Main Content ] start -->
+                    {% if design_list|length > 0 %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {% for design in design_list %}
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="{% url 'design:detail' design.id %}">
+                                                <h4>{{ design.project_name }}</h4>                                                
+                                            </a>
+                                            {% if design.created == design.updated %}
+                                                <p>Created at {{design.created}}</p>
+                                            {% else %}
+                                                <p>Created at {{design.created}} (Edited)</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a href="{% url 'design:detail' design.id %}"><button class="btn btn-primary btn-block">Details</button></a>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a href="{% url 'design:update' design.id %}"><button class="btn btn-light btn-block">Update</button></a>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a href="{% url 'design:delete' design.id %}"><button class="btn btn-danger btn-block">Delete</button></a>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                        <div class="row">
+                            <h4 class="col-md-12">No projects.</h4>
+                        </div>
+                    {% endif %}
+                    <!-- [ Main Content ] end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

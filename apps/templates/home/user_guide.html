@@ -1,0 +1,755 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}User guide{% endblock title %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css">
+<style>
+	body{
+		color: black;
+	}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="pcoded-content">
+	<div class="pcoded-inner-content">
+		<div class="main-body">
+			<div class="page-wrapper">
+				<div class="card">
+					<div class="card-body">
+						<h2>¡Welcome to HEPU!</h2>
+						<p>HEPU is a web-based software-as-a-service tool to design and perform feasibility studies of
+							hydrogen projects. It is oriented to project developers and project financiers, as it
+							increases quality and auditability of hydrogen development portfolios, de-risking the
+							decision making process for the stake-holder</p>
+						<hr>
+						<a href="#!" data-toggle="collapse" data-target="#collapsetechnic" aria-expanded="true" aria-controls="collapsetechnic"><h3>Technic design</h3></a>
+						<div class="collapse" id="collapsetechnic" aria-labelledby="headingOne">
+							<br>
+							<p>Your design will be divided in two steps, the
+								technical specifications is the first one and treats about the description of your
+								project without
+								talking about their costs yet, it means, submit parameters related with your production
+								and
+								answering questions about when and how. It’s divided into three parts:</p>
+							<h4>General</h4>
+							<ul>
+								<li>Project name: You can put the name that you want but we suggest a
+									functional one because this will be the name of the downloaded file.</li>
+								<li>Location: Write the city or the country of your project, this is
+									just for reference and doesn’t have any implication in your results.</li>
+								<li>Start of production: This is the year that your electrolyzer will
+									start to degrade and will be used to calculate the year of change stack.</li>
+								<li>Years of operation: Horizon of your project, is important for the
+									technical and economics results.</li>
+							</ul>
+							<h4>Energy supply</h4>
+							<p>Energy input: Select between Power purchase
+								agreement (PPA) or your own generation vector.</p>
+							<ul>
+								<li>PPA option allows you to choose between a 24/7 generation or a
+									customized one, where you must select the start and the finish hour of your
+									production. For both
+									you must enter the PPA nominal power in MegaWatts (MW).</li>
+								<li>User defined generation vector option allows you to upload a file
+									in 4 formats (TMY, TMY_SAM, TMY_PVsol and PVSyst) and the nominal power too.</li>
+							</ul>
+							<h4>Electrolysis</h4>
+							<p>Includes all the electrochemical and physical
+								parameters of the electrolyzer. If you don't know the respective data, please keep the
+								current ones.
+							</p>
+							<ul>
+								<li>Electrolyzer type: Select between Polymer electrolyte membrane
+									(PEM) and Alkaline (ALK) electrolysis. A Specific energy consumption versus Power
+									input graph
+									will be available for your analysis. Solid oxide electrolyzer cell (SOEC) will be
+									available
+									soon.</li>
+								<li>Electrolyzer nominal power: Must be indicated by the manufacturing
+									company and entered in MegaWatts (MW).</li>
+								<li>Min. electrolyzer efficiency before replacement [%]: Your
+									electrolyzer will be replaced whe the effiency decrease to this point.</li>
+								<li>Water supply: Select between “Tap water”or “Demi water”, it depends
+									on your own disponibility.</li>
+								<li>
+									<h5>PEM electrolyzer</h5>
+									<ul>
+										<li>Cell area [cm²]: Active area responsible for the
+											conduction of protons, separation of product gases, and electrical
+											insulation of the
+											electrodes</li>
+										<li>Thermoneutral voltage [V]: Voltage drop across the
+											electrochemical cell</li>
+										<li>Transfer coefficient alpha: Kinetic parameter employed
+											in activation and concentration overpotential</li>
+										<li>Limiting current density [A/cm²]: Maximum current
+											density required to achieve the desired electrode reaction.</li>
+										<li>Membrane thickness [cm]: Increase factor on the ohmic
+											protonic overpotential</li>
+										<li>Membrane hydration parameter: Decrease factor on the
+											ohmic protonic overpotential</li>
+										<li>Roughness factor anode [cm²/cm²]: Physical property for
+											anode involved in activation overpotential.</li>
+										<li>Roughness factor cathode[cm²/cm²]: Physical property
+											for cathode involved in activation overpotential.</li>
+										<li>Anode exchange current density at the ref. T:
+											Electrochemical property for anode involved in activation overpotential.
+										</li>
+										<li>Cathode exchange current density at the ref. T:
+											Electrochemical property for cathode involved in activation overpotential.
+										</li>
+										<li>Reference Temperature [K]: Standar condition
+											temperature</li>
+										<li>Nominal operating temperature [K]: Electrolyzer working
+											temperature</li>
+										<li>Anode activation energy [J/mol]: Energy lost due to the
+											slowness of electrochemical reactions</li>
+										<li>Cathode activation energy [J/mol]: Energy lost due to
+											the slowness of electrochemical reactions</li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+						<hr>
+						<a href="#!" data-toggle="collapse" data-target="#collapsecost" aria-expanded="true" aria-controls="collapsecost"><h3>Costs and financial inputs design</h3></a>
+						<div class="collapse" id="collapsecost" aria-labelledby="headingOne">
+							<p>This is the second and last step of your design,
+								you might not know all the parameters requested but try to get the best approximation to
+								them for a
+								good analysis, some of them are suggested for a better comprehension but remind that it
+								can change
+								for every different project.</p>
+							<h4>CAPEX</h4>
+							<ul>
+								<li>Specific Electrolyzer and BoP cost [USD/kW]: The sum of the
+									specific cost of your electrolyzer and the balance of plant, i.e. the necessary
+									components for
+									the hydrogen production.</li>
+								<li>Specific Development cost [USD/kW]: Include the costs of the
+									researching, growing and introducing your new project.</li>
+								<li>Installation cost [USD/kW]: Total cost of labor and materials for
+									your start of production.</li>
+								<li>Indirect costs [USD/project]: Any CAPEX cost not included before</li>
+								<li>Total CAPEX [USD/kW]: This section shows the sum of your three
+									previous inputs.</li>
+							</ul>
+							<h4>OPEX</h4>
+							<ul>
+								<li>Energy cost [USD/MWh]: Cost of the electrical supply, it might come
+									from a renewable or a fossil font.</li>
+								<li>O&amp;M [USD/kW/year]: Operation and maintenance costs. If you
+									don’t know this number you can suppose a 20% of the sum of the Specific Electrolyzer
+									and BoP
+									cost and Specific Development cost.</li>
+								<li>Water cost [USD/m3]: It depends if you will work with tap or demi
+									water, and where do you get your water from. Countries can have different
+									regulations for this
+									item.</li>
+								<li>Land cost [USD/ha/year]: Can be very variable but consider the
+									magnitude of your project, the land of the plant and the corresponding
+									administration.</li>
+							</ul>
+							<h4>Finance</h4>
+							<ul>
+								<li>Equity discount rate [%]:interest rate used in <a
+										href="https://www.investopedia.com/terms/d/dcf.asp">discounted cash flow</a>
+									analysis to
+									determine the present value of future cash flows.</li>
+								<li>Debt [%]: Percentage of capital that is debt.</li>
+								<li>Debt term [years]: Horizon of your debt.</li>
+								<li>Interest Rate [%]: Cost in percentage of your borrowing.</li>
+								<li>First category Tax [%]: Basic tax on income of a legal entity
+									domiciled or resident in Chile and engaged in commerce, mining, fishing, or
+									industrial
+									activities</li>
+							</ul>
+						</div>
+						<hr>
+						<a href="#!" data-toggle="collapse" data-target="#collapsesimulation" aria-expanded="true" aria-controls="collapsesimulation"><h3>Simulation</h3></a>
+						<div class="collapse" id="collapsesimulation" aria-labelledby="headingOne">
+							<p>Once you put all the data in their place, you must
+								select the “Simulation” button, the software will advise you if there is something
+								missing.</p>
+							<p>The software will take all your data and will
+								start running, this can take a few seconds.</p>
+							<p>Firstly, a yearly energy input vector will be
+								created depending on your energy supply data. Then, according to your electrolysis
+								definition,
+								consumption will be calculated by taking cell parameters and transforming them into
+								values on the
+								polarization curve. Degradation depends on your electrolyzer type, it will be used to
+								obtain the
+								year of stack replacements and calculate the hydrogen production decrease. Oxygen
+								production and
+								water consumption depends on this too.</p>
+							<p>Secondly, when all the technical data is
+								processed, is cost’s turn. CAPEX is the sum of the CAPEX inputs section and OPEX depends
+								on hours of
+								operation and type of degradation than, including water costs, allows to get the annual
+								operational
+								and replacements costs.</p>
+							<p>Next, cashflows are calculated over years of
+								analysis, separating between CAPEX, energy, O&amp;M, water and replacements costs. Their
+								present
+								values are calculated using WACC:</p>
+							<figure id="a5f3ef27-fd1a-4325-b7d8-6a32cc16f8b5" class="equation">
+								<div class="equation-container">
+									<span class="katex-display"><span class="katex"><span
+												class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"
+													display="block">
+													<semantics>
+														<mrow>
+															<mi>D</mi>
+															<mi>e</mi>
+															<mi>b</mi>
+															<mi>t</mi>
+															<mo>⋅</mo>
+															<mi>I</mi>
+															<mi>n</mi>
+															<mi>t</mi>
+															<mi>e</mi>
+															<mi>r</mi>
+															<mi>e</mi>
+															<mi>s</mi>
+															<mi>t</mi>
+															<mtext> </mtext>
+															<mi>R</mi>
+															<mi>a</mi>
+															<mi>t</mi>
+															<mi>e</mi>
+															<mo>⋅</mo>
+															<mo stretchy="false">(</mo>
+															<mn>1</mn>
+															<mo>-</mo>
+															<mi>T</mi>
+															<mi>a</mi>
+															<mi>x</mi>
+															<mo stretchy="false">)</mo>
+															<mo>+</mo>
+															<mo stretchy="false">(</mo>
+															<mn>1</mn>
+															<mo>-</mo>
+															<mi>D</mi>
+															<mi>e</mi>
+															<mi>b</mi>
+															<mi>t</mi>
+															<mo stretchy="false">)</mo>
+															<mo>⋅</mo>
+															<mi>D</mi>
+															<mi>i</mi>
+															<mi>s</mi>
+															<mi>c</mi>
+															<mi>o</mi>
+															<mi>u</mi>
+															<mi>n</mi>
+															<mi>t</mi>
+															<mtext> </mtext>
+															<mi>R</mi>
+															<mi>a</mi>
+															<mi>t</mi>
+															<mi>e</mi>
+														</mrow>
+														<annotation encoding="application/x-tex">Debt \cdot Interest\
+															Rate \cdot
+															(1-Tax)+(1-Debt)\cdot Discount\ Rate</annotation>
+													</semantics>
+												</math></span><span class="katex-html" aria-hidden="true"><span	class="base"><span class="strut"
+														style="height:0.69444em;vertical-align:0em;"></span><span
+														class="mord mathnormal">De</span><span
+														class="mord mathnormal">b</span><span
+														class="mord mathnormal">t</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span><span
+														class="mbin">⋅</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:0.68333em;vertical-align:0em;"></span><span
+														class="mord mathnormal"
+														style="margin-right:0.07847em;">I</span><span
+														class="mord mathnormal">n</span><span
+														class="mord mathnormal">t</span><span
+														class="mord mathnormal">eres</span><span
+														class="mord mathnormal">t</span><span
+														class="mspace"> </span><span class="mord mathnormal"
+														style="margin-right:0.00773em;">R</span><span
+														class="mord mathnormal">a</span><span
+														class="mord mathnormal">t</span><span
+														class="mord mathnormal">e</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span><span
+														class="mbin">⋅</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:1em;vertical-align:-0.25em;"></span><span
+														class="mopen">(</span><span class="mord">1</span><span
+														class="mspace"
+														style="margin-right:0.2222222222222222em;"></span><span
+														class="mbin">−</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:1em;vertical-align:-0.25em;"></span><span
+														class="mord mathnormal"
+														style="margin-right:0.13889em;">T</span><span
+														class="mord mathnormal">a</span><span
+														class="mord mathnormal">x</span><span
+														class="mclose">)</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span><span
+														class="mbin">+</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:1em;vertical-align:-0.25em;"></span><span
+														class="mopen">(</span><span class="mord">1</span><span
+														class="mspace"
+														style="margin-right:0.2222222222222222em;"></span><span
+														class="mbin">−</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:1em;vertical-align:-0.25em;"></span><span
+														class="mord mathnormal">De</span><span
+														class="mord mathnormal">b</span><span
+														class="mord mathnormal">t</span><span
+														class="mclose">)</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span><span
+														class="mbin">⋅</span><span class="mspace"
+														style="margin-right:0.2222222222222222em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:0.68333em;vertical-align:0em;"></span><span
+														class="mord mathnormal"
+														style="margin-right:0.02778em;">D</span><span
+														class="mord mathnormal">i</span><span
+														class="mord mathnormal">sco</span><span
+														class="mord mathnormal">u</span><span
+														class="mord mathnormal">n</span><span
+														class="mord mathnormal">t</span><span
+														class="mspace"> </span><span class="mord mathnormal"
+														style="margin-right:0.00773em;">R</span><span
+														class="mord mathnormal">a</span><span
+														class="mord mathnormal">t</span><span
+														class="mord mathnormal">e</span></span></span></span></span>
+								</div>
+							</figure>
+							<p>And LCOH is obtained considering:</p>
+							<figure id="3f0a17a0-c159-4285-873e-2364b566a89c" class="equation">
+								<div class="equation-container"><span class="katex-display"><span class="katex"><span
+												class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"
+													display="block">
+													<semantics>
+														<mrow>
+															<mi>L</mi>
+															<mi>C</mi>
+															<mi>O</mi>
+															<mi>H</mi>
+															<mo>=</mo>
+															<mfrac>
+																<mtext>Sum of costs over useful life</mtext>
+																<mtext>Sum of hydrogen produced over useful life</mtext>
+															</mfrac>
+															<mo>=</mo>
+															<mfrac>
+																<mrow>
+																	<munderover>
+																		<mo>∑</mo>
+																		<mrow>
+																			<mi>t</mi>
+																			<mo>=</mo>
+																			<mn>1</mn>
+																		</mrow>
+																		<mi>n</mi>
+																	</munderover>
+																	<mfrac>
+																		<mrow>
+																			<mi>I</mi>
+																			<mi>t</mi>
+																			<mo>+</mo>
+																			<mi>M</mi>
+																			<mi>t</mi>
+																		</mrow>
+																		<mrow>
+																			<mo stretchy="false">(</mo>
+																			<mn>1</mn>
+																			<mo>+</mo>
+																			<mi>r</mi>
+																			<msup>
+																				<mo stretchy="false">)</mo>
+																				<mi>t</mi>
+																			</msup>
+																		</mrow>
+																	</mfrac>
+																</mrow>
+																<mrow>
+																	<munderover>
+																		<mo>∑</mo>
+																		<mrow>
+																			<mi>t</mi>
+																			<mo>=</mo>
+																			<mn>1</mn>
+																		</mrow>
+																		<mi>n</mi>
+																	</munderover>
+																	<mfrac>
+																		<mrow>
+																			<mi>H</mi>
+																			<mi>t</mi>
+																		</mrow>
+																		<mrow>
+																			<mo stretchy="false">(</mo>
+																			<mn>1</mn>
+																			<mo>+</mo>
+																			<mi>r</mi>
+																			<msup>
+																				<mo stretchy="false">)</mo>
+																				<mi>t</mi>
+																			</msup>
+																		</mrow>
+																	</mfrac>
+																</mrow>
+															</mfrac>
+															<mo stretchy="false">[</mo>
+															<mi>U</mi>
+															<mi>S</mi>
+															<mi>D</mi>
+															<mi mathvariant="normal">/</mi>
+															<mi>k</mi>
+															<mi>g</mi>
+															<msub>
+																<mi>H</mi>
+																<mn>2</mn>
+															</msub>
+															<mo stretchy="false">]</mo>
+														</mrow>
+														<annotation encoding="application/x-tex">LCOH = \frac{\text{Sum
+															of costs
+															over useful life}}{\text{Sum of hydrogen produced over
+															useful life}} =
+															\frac{\sum_{t=1}^{n}\frac{It+Mt}{(1+r)^t}}{\sum_{t=1}^{n}\frac{Ht}{(1+r)^t}}
+															[USD/kg H_{2}]</annotation>
+													</semantics>
+												</math></span><span class="katex-html" aria-hidden="true"><span
+													class="base"><span class="strut"
+														style="height:0.68333em;vertical-align:0em;"></span><span
+														class="mord mathnormal">L</span><span class="mord mathnormal"
+														style="margin-right:0.02778em;">CO</span><span
+														class="mord mathnormal"
+														style="margin-right:0.08125em;">H</span><span class="mspace"
+														style="margin-right:0.2777777777777778em;"></span><span
+														class="mrel">=</span><span class="mspace"
+														style="margin-right:0.2777777777777778em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:2.25188em;vertical-align:-0.8804400000000001em;"></span><span
+														class="mord"><span class="mopen nulldelimiter"></span><span
+															class="mfrac"><span class="vlist-t vlist-t2"><span
+																	class="vlist-r"><span class="vlist"
+																		style="height:1.37144em;"><span
+																			style="top:-2.314em;"><span class="pstrut"
+																				style="height:3em;"></span><span
+																				class="mord"><span
+																					class="mord text"><span
+																						class="mord">Sum of hydrogen produced over useful life</span></span></span></span><span
+																			style="top:-3.23em;"><span class="pstrut"
+																				style="height:3em;"></span><span
+																				class="frac-line"
+																				style="border-bottom-width:0.04em;"></span></span><span
+																			style="top:-3.677em;"><span class="pstrut"
+																				style="height:3em;"></span><span
+																				class="mord"><span
+																					class="mord text"><span
+																						class="mord">Sum of costs over useful life</span></span></span></span></span><span
+																		class="vlist-s">​</span></span><span
+																	class="vlist-r"><span class="vlist"
+																		style="height:0.8804400000000001em;"><span></span></span></span></span></span><span
+															class="mclose nulldelimiter"></span></span><span
+														class="mspace"
+														style="margin-right:0.2777777777777778em;"></span><span
+														class="mrel">=</span><span class="mspace"
+														style="margin-right:0.2777777777777778em;"></span></span><span
+													class="base"><span class="strut"
+														style="height:3.064662em;vertical-align:-1.282331em;"></span><span
+														class="mord"><span class="mopen nulldelimiter"></span><span
+															class="mfrac"><span class="vlist-t vlist-t2"><span
+																	class="vlist-r"><span class="vlist"
+																		style="height:1.782331em;"><span
+																			style="top:-2.237669em;"><span
+																				class="pstrut"
+																				style="height:3em;"></span><span
+																				class="mord"><span class="mop"><span
+																						class="mop op-symbol small-op"
+																						style="position:relative;top:-0.0000050000000000050004em;">∑</span><span
+																						class="msupsub"><span
+																							class="vlist-t vlist-t2"><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.804292em;"><span
+																										style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span
+																											class="pstrut"
+																											style="height:2.7em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mord mathnormal mtight">t</span><span
+																													class="mrel mtight">=</span><span
+																													class="mord mtight">1</span></span></span></span><span
+																										style="top:-3.2029em;margin-right:0.05em;"><span
+																											class="pstrut"
+																											style="height:2.7em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mord mathnormal mtight">n</span></span></span></span></span><span
+																									class="vlist-s">​</span></span><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span
+																					class="mspace"
+																					style="margin-right:0.16666666666666666em;"></span><span
+																					class="mord"><span
+																						class="mopen nulldelimiter"></span><span
+																						class="mfrac"><span
+																							class="vlist-t vlist-t2"><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.872331em;"><span
+																										style="top:-2.655em;"><span
+																											class="pstrut"
+																											style="height:3em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mopen mtight">(</span><span
+																													class="mord mtight">1</span><span
+																													class="mbin mtight">+</span><span
+																													class="mord mathnormal mtight"
+																													style="margin-right:0.02778em;">r</span><span
+																													class="mclose mtight"><span
+																														class="mclose mtight">)</span><span
+																														class="msupsub"><span
+																															class="vlist-t"><span
+																																class="vlist-r"><span
+																																	class="vlist"
+																																	style="height:0.7253428571428571em;"><span
+																																		style="top:-2.786em;margin-right:0.07142857142857144em;"><span
+																																			class="pstrut"
+																																			style="height:2.5em;"></span><span
+																																			class="sizing reset-size3 size1 mtight"><span
+																																				class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span><span
+																										style="top:-3.23em;"><span
+																											class="pstrut"
+																											style="height:3em;"></span><span
+																											class="frac-line"
+																											style="border-bottom-width:0.04em;"></span></span><span
+																										style="top:-3.394em;"><span
+																											class="pstrut"
+																											style="height:3em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mord mathnormal mtight"
+																													style="margin-right:0.08125em;">H</span><span
+																													class="mord mathnormal mtight">t</span></span></span></span></span><span
+																									class="vlist-s">​</span></span><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.52em;"><span></span></span></span></span></span><span
+																						class="mclose nulldelimiter"></span></span></span></span><span
+																			style="top:-3.23em;"><span class="pstrut"
+																				style="height:3em;"></span><span
+																				class="frac-line"
+																				style="border-bottom-width:0.04em;"></span></span><span
+																			style="top:-3.91em;"><span class="pstrut"
+																				style="height:3em;"></span><span
+																				class="mord"><span class="mop"><span
+																						class="mop op-symbol small-op"
+																						style="position:relative;top:-0.0000050000000000050004em;">∑</span><span
+																						class="msupsub"><span
+																							class="vlist-t vlist-t2"><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.804292em;"><span
+																										style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span
+																											class="pstrut"
+																											style="height:2.7em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mord mathnormal mtight">t</span><span
+																													class="mrel mtight">=</span><span
+																													class="mord mtight">1</span></span></span></span><span
+																										style="top:-3.2029em;margin-right:0.05em;"><span
+																											class="pstrut"
+																											style="height:2.7em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mord mathnormal mtight">n</span></span></span></span></span><span
+																									class="vlist-s">​</span></span><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span
+																					class="mspace"
+																					style="margin-right:0.16666666666666666em;"></span><span
+																					class="mord"><span
+																						class="mopen nulldelimiter"></span><span
+																						class="mfrac"><span
+																							class="vlist-t vlist-t2"><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.872331em;"><span
+																										style="top:-2.655em;"><span
+																											class="pstrut"
+																											style="height:3em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mopen mtight">(</span><span
+																													class="mord mtight">1</span><span
+																													class="mbin mtight">+</span><span
+																													class="mord mathnormal mtight"
+																													style="margin-right:0.02778em;">r</span><span
+																													class="mclose mtight"><span
+																														class="mclose mtight">)</span><span
+																														class="msupsub"><span
+																															class="vlist-t"><span
+																																class="vlist-r"><span
+																																	class="vlist"
+																																	style="height:0.7253428571428571em;"><span
+																																		style="top:-2.786em;margin-right:0.07142857142857144em;"><span
+																																			class="pstrut"
+																																			style="height:2.5em;"></span><span
+																																			class="sizing reset-size3 size1 mtight"><span
+																																				class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span><span
+																										style="top:-3.23em;"><span
+																											class="pstrut"
+																											style="height:3em;"></span><span
+																											class="frac-line"
+																											style="border-bottom-width:0.04em;"></span></span><span
+																										style="top:-3.394em;"><span
+																											class="pstrut"
+																											style="height:3em;"></span><span
+																											class="sizing reset-size6 size3 mtight"><span
+																												class="mord mtight"><span
+																													class="mord mathnormal mtight"
+																													style="margin-right:0.07847em;">I</span><span
+																													class="mord mathnormal mtight">t</span><span
+																													class="mbin mtight">+</span><span
+																													class="mord mathnormal mtight">Mt</span></span></span></span></span><span
+																									class="vlist-s">​</span></span><span
+																								class="vlist-r"><span
+																									class="vlist"
+																									style="height:0.52em;"><span></span></span></span></span></span><span
+																						class="mclose nulldelimiter"></span></span></span></span></span><span
+																		class="vlist-s">​</span></span><span
+																	class="vlist-r"><span class="vlist"
+																		style="height:1.282331em;"><span></span></span></span></span></span><span
+															class="mclose nulldelimiter"></span></span><span
+														class="mopen">[</span><span class="mord mathnormal"
+														style="margin-right:0.10903em;">U</span><span
+														class="mord mathnormal"
+														style="margin-right:0.05764em;">S</span><span
+														class="mord mathnormal"
+														style="margin-right:0.02778em;">D</span><span
+														class="mord">/</span><span class="mord mathnormal"
+														style="margin-right:0.03148em;">k</span><span
+														class="mord mathnormal"
+														style="margin-right:0.03588em;">g</span><span class="mord"><span
+															class="mord mathnormal"
+															style="margin-right:0.08125em;">H</span><span
+															class="msupsub"><span class="vlist-t vlist-t2"><span
+																	class="vlist-r"><span class="vlist"
+																		style="height:0.30110799999999993em;"><span
+																			style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span
+																				class="pstrut"
+																				style="height:2.7em;"></span><span
+																				class="sizing reset-size6 size3 mtight"><span
+																					class="mord mtight"><span
+																						class="mord mtight">2</span></span></span></span></span><span
+																		class="vlist-s">​</span></span><span
+																	class="vlist-r"><span class="vlist"
+																		style="height:0.15em;"><span></span></span></span></span></span></span><span
+														class="mclose">]</span></span></span></span></span></div>
+							</figure>
+							<p>Where:</p>
+							<ul>
+								<li>It: Investment expenses</li>
+								<li>Mt: Operation and maintenance expenses</li>
+								<li>Ht: Hydrogen production</li>
+								<li>r: Discount rate</li>
+								<li>n: Horizon’s project</li>
+							</ul>
+							<p>Finally, plots are generated using vectors obtained in the mentioned process.</p>
+						</div>
+						<hr>
+						<a href="#!" data-toggle="collapse" data-target="#collapseresults" aria-expanded="true" aria-controls="collapseresults"><h3>Results</h3></a>
+						<div class="collapse" id="collapseresults" aria-labelledby="headingOne">
+							<h4>Performance summary year 1</h4>
+							<ul>
+								<li>Hydrogen production year 1 [tons/year]: Divided by months and
+									considering their different quantity of days.</li>
+								<li>Oxygen production year 1 [tons/year]: It corresponds to 8 times the
+									hydrogen production.</li>
+								<li>Energy consumption year 1 [GWh/year]: Depends on the energy input
+									and the size of your project.</li>
+								<li>Electrolyzer load factor [%]: Average load over peak load.</li>
+								<li>Average sp. energy consumption [kWh/kgH2]: Energy consumption per
+									Hydrogen kilogram.</li>
+								<li>Water consumption year 1 [m3/year]: Variates if you select demi or
+									tap water and, of course, your production of hydrogen.</li>
+								<li>Energy curtailed [GWh/year]: Quantity of energy that it’s not being
+									used for hydrogen production.</li>
+								<li>Energy cost [USD/year]: Total energy cost for year 1.</li>
+								<li>Water cost [USD/year]: Total water cost for year 1.</li>
+								<li>Production per month graph: Year 1 hydrogen production detailed
+									monthly.</li>
+							</ul>
+							<h4>Costs during life cycle</h4>
+							<ul>
+								<li>Total CAPEX [USD]: Sum of the electrolyzer and BoP, development and
+									land cost considering the size of the plant.</li>
+								<li>Present Cost of replacements [USD]: Considering the total of these.
+								</li>
+								<li>Stack replacements: Number of stack replacements you must do in the
+									horizon of your project.</li>
+								<li>Year of replacements: Quantity of years after your start of
+									production when you must make the replacement.</li>
+								<li>WACC: Weighted Average Cost of Capital. </li>
+								<li>LCOH [USD/kgH2]: Levelized Cost of Hydrogen. Calculated by the sum
+									of your CAPEX, energy, O&amp;M, water and stack costs over the outputs.</li>
+								<li>Hydrogen production during project life (graphic): Horizon’s
+									hydrogen production detailed annually.</li>
+								<li>Energy performance during life cycle (graphic): Horizon’s energy
+									consumption per kilogram of hydrogen detailed annually.</li>
+							</ul>
+						</div>
+						<hr>
+						<a href="#!" data-toggle="collapse" data-target="#collapsefaq" aria-expanded="true" aria-controls="collapsefaq"><h3>FAQs</h3></a>
+						<div class="collapse" id="collapsefaq" aria-labelledby="headingOne">
+							<br>
+							<a href="#!" data-toggle="collapse" data-target="#collapseQ1" aria-expanded="true" aria-controls="collapseQ1"><h4>I can’t register my account</h4></a>
+							<div class="collapse" id="collapseQ1" aria-labelledby="headingOne">
+								<p>This may be because your mail is not linked with HEPU’s data base. Please contact HEPU
+									team.</p>
+							</div>
+							<br>
+							<a href="#!" data-toggle="collapse" data-target="#collapseQ2" aria-expanded="true" aria-controls="collapseQ2"><h4>¿How can I get the details of the results?</h4></a>
+							<br>
+							<a href="#!" data-toggle="collapse" data-target="#collapseQ3" aria-expanded="true" aria-controls="collapseQ3"><h4>I want to change the data, ¿how can I do that?</h4></a>
+							<div class="collapse" id="collapseQ3" aria-labelledby="headingOne">
+								<p>You can start a new project or select the “Back” button at the bottom of the results
+									page.</p>
+							</div>
+							<br>
+							<a href="#!" data-toggle="collapse" data-target="#collapseQ4" aria-expanded="true" aria-controls="collapseQ4"><h4>¿How many tries do I have?</h4></a>
+							<br>
+							<a href="#!" data-toggle="collapse" data-target="#collapseQ5" aria-expanded="true" aria-controls="collapseQ5"><h4>My graphics have been misconfigured</h4></a>
+							<div class="collapse" id="collapseQ5" aria-labelledby="headingOne">
+								<p>Please re-charge the web page. </p>
+							</div>
+							<br>
+							<a href="#!" data-toggle="collapse" data-target="#collapseQ6" aria-expanded="true" aria-controls="collapseQ6"><h4>I lost my project’s results, ¿what can I do?</h4></a>
+							<div class="collapse" id="collapseQ6" aria-labelledby="headingOne">
+								<p>In the “Results” section you can check all your projects. If your project isn’t there,
+									please contact HEPU team.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% if request.user.is_staff %}
+				<a href="{% url 'admin:index' %}"><p>Go to admin site</p></a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{% endblock content %}

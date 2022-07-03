@@ -1,0 +1,171 @@
+{% load custom_aprox %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Resume</title>
+    <style>
+        @page {
+            size: A4; /* Change from the default size of A4 */
+        }
+        body {
+            font-family: "Open Sans", sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            position: relative;
+            margin: 0;
+        }
+        h1 {
+            background-color: rgb(36, 81, 230);
+            margin: 0;
+            padding: 1rem 0;
+            text-align: center;
+            border-radius: 25px;
+            color: whitesmoke;
+        }
+        section{
+            border: 1px solid rgb(87, 87, 87);
+            border-radius: 25px;
+            margin: 5px;
+            padding: 0.5rem;
+            padding-top: 0;
+        }
+        table{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        td{
+            padding: 4px;
+            text-align: left;
+            vertical-align: top;
+            border: 1px solid black;
+            border-spacing: 0;
+        }
+        .title{
+            background-color: cornflowerblue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <H1>{{ design.project_name }}</H1>
+    <section>
+        <h2>Performance summary year 1</h2>
+        <div id="monthly_chart"></div>
+        <table id="performance_summary_table">
+            <tr>
+                <td class="title">Hydrogen production [tons/year]</td>
+                <td>{{ design.results.hydrogen_production|number_format }}</td>
+            </tr>
+            <tr>
+                <td class="title">Oxygen production [tons/year]</td>
+                <td>{{design.results.oxigen_production|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Energy consumption [GWh/year]</td>
+                <td>{{ design.results.energy_consumption|number_format }}</td>
+            </tr>
+            <tr>
+                <td class="title">Electrolyzer load factor [%]</td>
+                <td>{{ design.results.load_factor|number_format }}</td>
+            </tr>
+            <tr>
+                <td class="title">Average sp. energy consumption [kWh/kgH2]</td>
+                <td>{{design.results.average_energy_consumption|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Water consumption [m3/year]</td>
+                <td>{{design.results.water_consumption|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Energy curtailed [GWh/year]</td>
+                <td>{{design.results.curtailed_energy|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Energy cost [USD/year]</td>
+                <td>{{design.results.energy_cost|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Water cost [USD/year]</td>
+                <td>{{design.results.water_cost|number_format}}</td>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <h2>Overall techno-economic performance</h2>
+        <table>
+            <tr>
+                <td class="title">CAPEX</td>
+                <td>{{design.results.lcoh_data|lcoh_display:'CAPEX'}}</td>
+            </tr>
+            <tr>
+                <td class="title">Energy</td>
+                <td>{{design.results.lcoh_data|lcoh_display:'Energy'}}</td>
+            </tr>
+            <tr>
+                <td class="title">O&M</td>
+                <td>{{design.results.lcoh_data|lcoh_display:'O&M'}}</td>
+            </tr>
+            <tr>
+                <td class="title">Water</td>
+                <td>{{design.results.lcoh_data|lcoh_display:'Water'}}</td>
+            </tr>
+            <tr>
+                <td class="title">Land</td>
+                <td>{{design.results.lcoh_data|lcoh_display:'Land'}}</td>
+            </tr>
+            <tr>
+                <td class="title">Replacemets</td>
+                <td>{{design.results.lcoh_data|lcoh_display:'Replacements'}}</td>
+            </tr>
+        </table>
+        <div id="lcoh_chart"></div>
+    </section>
+    <section>
+        <h2>Cost during life cycle</h2>
+        <table>
+            <tr>
+                <td class="title">Total Capex</td>
+                <td>{{design.results.total_capex|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Present Cost of energy for life cycle [USD]</td>
+                <td>{{design.results.nvp_energy_cost|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Present Cost of O&M for life cycle [USD]</td>
+                <td>{{design.results.nvp_om|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Present Cost of water for life cycle [USD]</td>
+                <td>{{design.results.nvp_water|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Present Cost of land for life cycle [USD]</td>
+                <td>{{design.results.nvp_land|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Present Cost of replacements [USD]</td>
+                <td>{{design.results.present_stack_replacements|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Stacks replacements [#]</td>
+                <td>{{design.results.stack_replacements|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">Year of replacements</td>
+                <td>{{design.results.year_of_replacements|list_formater}}</td>
+            </tr>
+            <tr>
+                <td class="title">WACC</td>
+                <td>{{design.results.wacc|number_format}}</td>
+            </tr>
+            <tr>
+                <td class="title">LCOH [USD/kgH2]</td>
+                <td>{{design.results.lcoh|number_format}}</td>
+            </tr>
+        </table>
+        <div id="yearly_chart"></div>
+        <div id="energy_chart"></div>
+    </section>
+</body>
+</html>

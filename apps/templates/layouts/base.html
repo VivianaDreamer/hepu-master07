@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        HEPU - {% block title %}{% endblock %}
+    </title>
+    <link rel="shortcut icon" href="/static/assets/icons/favicon.ico"/>
+    <meta name="theme-color" content="#ffffff">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- fontawesome icon -->
+    <link rel="stylesheet" href="/static/assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <!-- animation css -->
+    <link rel="stylesheet" href="/static/assets/plugins/animation/css/animate.min.css">
+    <!-- vendor css -->
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+
+<body>
+    <!-- Top Bar -->
+    {% include 'includes/navigation.html' %}
+
+    <!-- SideBar -->
+    {% if user.is_authenticated %}
+        {% if not 'resume' in request.path %}
+            {% include 'includes/sidebar.html' %}
+        {% endif %}
+    {% endif %}   
+
+    <div class="{% if not 'resume' in request.path %}pcoded-main-container{% endif %}">
+        <div class="pcoded-wrapper">
+
+            {% block content %}{% endblock content %}
+
+        </div>
+    </div>
+
+    {% include 'includes/scripts.html' %}
+
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+</html>

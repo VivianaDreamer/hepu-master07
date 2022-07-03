@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} New Project {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="main-body">
+            <div class="page-wrapper">
+                <p>Please, complete both forms to create a new project.</p>
+                <!-- [ Main Content ] start -->
+                {% include "design/form.html" %}
+                <!-- [ Main Content ] end -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="/static/assets/js/design.js"></script>
+{% endblock javascripts %}

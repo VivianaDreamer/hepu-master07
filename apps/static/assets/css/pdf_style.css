@@ -1,0 +1,35 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    position: relative;
+}
+h1 {
+    background-color: rgb(36, 81, 230);
+    margin: 0;
+    padding: 1rem 0;
+    text-align: center;
+    border-radius: 25px;
+    color: whitesmoke;
+}
+section{
+    border: 1px solid rgb(87, 87, 87);
+    border-radius: 25px;
+    margin: 5px;
+    padding: 1rem;
+}
+table{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td{
+    padding: 4px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid black;
+    border-spacing: 0;
+}
+.title{
+    background-color: cornflowerblue;
+    font-weight: bold;
+}

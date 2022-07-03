@@ -1,0 +1,806 @@
+{% extends "layouts/base.html" %}
+{% load custom_aprox %}
+
+{% block title %} Details from {{design.project_name}} {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    var a = "{{design.results.monthly_plot_data|safe}}".replace(/'/g,String.fromCharCode(34));
+    var monthly_plot_data = Object.entries(JSON.parse(a));
+    monthly_plot_data.unshift(['Label','Value']);
+    var b = "{{design.results.yearly_plot_data|safe}}".replace(/'/g,String.fromCharCode(34));
+    var yearly_plot_data = Object.entries(JSON.parse(b));
+    yearly_plot_data.unshift(['Label','Value']);
+    var c = "{{design.results.lcoh_data|safe}}".replace(/'/g,String.fromCharCode(34));
+    var lcoh_data = Object.entries(JSON.parse(c));
+    lcoh_data.unshift(['Key','Value']);
+    var d = "{{design.results.energy_plot_data|safe}}".replace(/'/g,String.fromCharCode(34));
+    var energy_plot_data = Object.entries(JSON.parse(d));
+    energy_plot_data.unshift(['Label','Value']);
+    var e = "{{design.results.capex_breakdown|safe}}".replace(/'/g,String.fromCharCode(34));
+    var capex_breakdown = Object.entries(JSON.parse(e));
+    capex_breakdown.unshift(['Key','Value']);
+    var f = "{{design.results.opex_breakdown|safe}}".replace(/'/g,String.fromCharCode(34));
+    var opex_breakdown = Object.entries(JSON.parse(f));
+    opex_breakdown.unshift(['Key','Value']);
+
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart() {
+
+        // Create the data table.
+        var monthly_graph = new google.visualization.arrayToDataTable(monthly_plot_data, false);
+        var yearly_graph = new google.visualization.arrayToDataTable(yearly_plot_data, false);
+        var lcoh_graph = new google.visualization.arrayToDataTable(lcoh_data, false);
+        var energy_graph = new google.visualization.arrayToDataTable(energy_plot_data, false);
+        var capex_graph = new google.visualization.arrayToDataTable(capex_breakdown, false);
+        var opex_graph = new google.visualization.arrayToDataTable(opex_breakdown, false);
+
+        // Set chart options
+        var monthly_options = {
+            title:'Monthly hydrogen production year 1',
+            legend:'none',
+            titleTextStyle:{
+                fontName:'Open Sans',
+                fontSize:14,
+                float:'center'
+            },
+            hAxis:{
+                title:'Month'
+            },
+            vAxis:{
+                title:'Tons of H2'
+            },
+            height:500,
+            width:'100%',
+        };
+        var yearly_options = {
+            legend:'none',
+            title:'Hydrogen production during project life',
+            titleTextStyle:{
+                fontName:'Open Sans',
+                fontSize:14,
+            },
+            hAxis:{
+                title:'Year'
+            },
+            vAxis:{
+                title:'Tons of H2'
+            },
+            height:300,
+            width:'100%'
+        };
+        var lcoh_options = {
+            legend:'none',
+            title:'LCOH: '+'{{design.results.lcoh|safe}}',
+            titleTextStyle:{
+                fontName:'Open Sans',
+                fontSize:14,
+            },
+            height:'150px',
+            width:'100%',
+            is3D:true,
+        };
+        var energy_options = {
+            legend:'none',
+            title:'Energy performance during life cycle',
+            titleTextStyle:{
+                fontName:'Open Sans',
+                fontSize:14,
+            },
+            hAxis:{
+                title:'Year'
+            },
+            vAxis:{
+                title:'kWh / kgH2'
+            },
+            height:300,
+            width:'100%'
+        };
+        var capex_breakdown_options = {
+            legend:'none',
+            title:'CAPEX: '+'{{design.results.capex_tot|number_format|safe}}',
+            titleTextStyle:{
+                fontName:'Open Sans',
+                fontSize:14,
+            },
+            height:'150px',
+            width:'100%',
+            is3D:true,
+        };
+        var opex_breakdown_options = {
+            legend:'none',
+            title:'OPEX: '+'{{design.results.opex_tot|number_format|safe}}',
+            titleTextStyle:{
+                fontName:'Open Sans',
+                fontSize:14,
+            },
+            height:'150px',
+            width:'100%',
+            is3D:true,
+        };
+
+        var monthly_chart = document.getElementById('monthly_chart');
+        var yearly_chart = document.getElementById('yearly_chart');
+        var lcoh_chart = document.getElementById('lcoh_chart');
+        var energy_chart = document.getElementById('energy_chart');
+        var capex_breakdown_chart = document.getElementById('capex_breakdown_chart');
+        var opex_breakdown_chart = document.getElementById('opex_breakdown_chart');
+
+        // Instantiate and draw our chart, passing in some options.
+        var monthly = new google.visualization.ColumnChart(monthly_chart);
+        var yearly = new google.visualization.ColumnChart(yearly_chart);
+        var lcoh = new google.visualization.PieChart(lcoh_chart);
+        var energy = new google.visualization.ColumnChart(energy_chart);
+        var capex = new google.visualization.PieChart(capex_breakdown_chart);
+        var opex = new google.visualization.PieChart(opex_breakdown_chart);
+
+        monthly.draw(monthly_graph,monthly_options);
+        yearly.draw(yearly_graph,yearly_options);
+        lcoh.draw(lcoh_graph,lcoh_options);
+        energy.draw(energy_graph,energy_options);
+        capex.draw(capex_graph, capex_breakdown_options);
+        opex.draw(opex_graph, opex_breakdown_options);
+    }
+
+    window.addEventListener('resize',()=>{
+        google.charts.setOnLoadCallback(drawChart);
+    });
+
+</script>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h3>{{design.project_name}}</h3>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="feather icon-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'design:results' %}">Results</a></li>
+                            <li class="breadcrumb-item"><a href="">Details</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- [ Main Content ] start -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs" id="nav_tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link text-uppercase active show" id="results_tab" data-toggle="tab" href="#results" aria-selected="true">Results</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-uppercase show" id="technic_data_tab" data-toggle="tab" href="#technic_data" aria-selected="false">Technical specifications Data</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-uppercase show" id="economic_data_tab" data-toggle="tab" href="#economic_data" aria-selected="false">Costs and financial input Data</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-uppercase show" data-toggle="tab" href="#downloads" aria-selected="false">Downloads</a>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">OPTIONS</button>
+                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                    <a class="dropdown-item" href="{% url 'design:update' design.id %}">Update</a>
+                                    <a class="dropdown-item" href="{% url 'design:results' %}">Back</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade active show" id="results" role="tabpanel">
+                                <div class="card" id="technical">
+                                    <div class="card-header">
+                                        <h5>Performance summary year 1</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div id="monthly_chart"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label title="Divided by months and considering their different quantity of days">Hydrogen production [tons/year]</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label title="It corresponds to 8 times the hydrogen production">Oxygen production [tons/year]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{ design.results.hydrogen_production|number_format }}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{design.results.oxigen_production|number_format}}">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title="Depends on the energy input and the size of your project">Energy consumption [GWh/year]</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title="Average load over peak load">Electrolyzer load factor [%]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{ design.results.energy_consumption|number_format }}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{ design.results.load_factor|number_format }}">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title="Energy consumption per Hydrogen kilogram">Average sp. energy consumption [kWh/kgH2]</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title=" Variates if you select demi or tap water and, of course, your production of hydrogen">Water consumption [m3/year]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{design.results.average_energy_consumption|number_format}}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{design.results.water_consumption|number_format}}">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title="Quantity of energy that it’s not being used for hydrogen production">Energy curtailed [GWh/year]</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title="Total energy cost for year 1">Energy cost [USD/year]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{design.results.curtailed_energy|number_format}}">
+                                                    </div>                                            
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{design.results.energy_cost|number_format}}">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <label title="Total water cost for year 1">Water cost [USD/year]</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" readonly value="{{design.results.water_cost|number_format}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>                                
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Overall techno-economic performance</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>LCOH Breakdown [USD/kgH2]</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div id="lcoh_chart"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>CAPEX</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh_data|lcoh_display:'CAPEX'}}">
+                                                                <br>
+                                                                <label>Energy</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh_data|lcoh_display:'Energy'}}">
+                                                                <br>
+                                                                <label>O&M</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh_data|lcoh_display:'O&M'}}">
+                                                                <br>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Water</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh_data|lcoh_display:'Water'}}">
+                                                                <br>
+                                                                <label>Land</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh_data|lcoh_display:'Land'}}">
+                                                                <br>
+                                                                <label>Replacements</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh_data|lcoh_display:'Replacements'}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>CAPEX Breakdown [USD]</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div id="capex_breakdown_chart"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>Electrolyzer</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.capex_breakdown|lcoh_display:'Electrolyzer'}}">
+                                                                <br>
+                                                                <label>Development</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.capex_breakdown|lcoh_display:'Development'}}">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Installation</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.capex_breakdown|lcoh_display:'Installation'}}">
+                                                                <br>
+                                                                <label>Indirect</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.capex_breakdown|lcoh_display:'Indirect'}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>OPEX Breakdown [USD/year]</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div id="opex_breakdown_chart"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>Energy</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.opex_breakdown|lcoh_display:'Energy'}}">
+                                                                <br>
+                                                                <label>O&M</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.opex_breakdown|lcoh_display:'OM'}}">
+                                                                <br>
+                                                                <label>Water</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.opex_breakdown|lcoh_display:'water'}}">
+                                                                <br>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Land</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.opex_breakdown|lcoh_display:'land'}}">
+                                                                <br>
+                                                                <label>Replacements</label>
+                                                                <input type="text" class="form-control" readonly value="{{design.results.opex_breakdown|lcoh_display:'Replacements'}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                  
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Costs during life cycle</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label title="Sum of the electrolyzer and BoP, development and land cost considering the size of the plant">Total CAPEX [USD]</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Present Cost of energy for life cycle [USD]</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Present Cost of O&M for life cycle [USD]</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Present Cost of water for life cycle [USD]</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.total_capex|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.nvp_energy_cost|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.nvp_om|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.nvp_water|number_format}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <br>
+                                                <label>Present Cost of land for life cycle [USD]</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <br>
+                                                <label title="Considering the total of these">Present Cost of replacements [USD]</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <br>
+                                                <label title="Number of stack replacements you must do in the horizon of your project">Stacks replacements [#]</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <br>
+                                                <label title="Quantity of years after your start of production when you must make the replacement">Year of replacements</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.nvp_land|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.present_stack_replacements|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.stack_replacements|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.year_of_replacements|list_formater}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <br>
+                                                <label>WACC</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <br>
+                                                <label title="Levelized Cost of Hydrogen. Calculated by the sum of your CAPEX, energy, O&M, water and stack costs over the outputs">LCOH [USD/kgH2]</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.wacc|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" readonly value="{{design.results.lcoh|number_format}}">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div id="yearly_chart"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div id="energy_chart"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="technic_data" role="tabpanel">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>General</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Location</label>
+                                                <input type="text" class="form-control" readonly value="{{design.location}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Start of production</label>
+                                                <input type="text" class="form-control" readonly value="{{design.cod}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Years of Operation</label>
+                                                <input type="text" class="form-control" readonly value="{{design.horizon}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Energy supply</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Operation type</label>
+                                                <input type="text" class="form-control" readonly value="{{design.op_type}}">
+                                                <br>
+                                                <label>Nominal Power</label>
+                                                <input type="text" class="form-control" readonly value="{{design.nom_power}}">
+                                            </div>
+                                            {% if design.op_type == "PPA" %}
+                                            <div class="col-md-3">
+                                                <label>PPA Type</label>
+                                                <input type="text" class="form-control" readonly value="{{design.ppa_type}}">
+                                            </div>
+                                            {% endif %}
+                                            <div class="col-md-3">
+                                                {% if design.op_type == "PPA" and design.ppa_type == "Custom" %}
+                                                    <label>From</label>
+                                                    <input type="text" class="form-control" readonly value="{{design.customized_from}}">
+                                                    <br>
+                                                    <label>To</label>
+                                                    <input type="text" class="form-control" readonly value="{{design.customized_to}}">
+                                                {% endif %}
+                                                {% if design.op_type == "On-site" or design.op_type == "On-site generation"%}
+                                                    <label>File type</label>
+                                                    <input type="text" class="form-control" readonly value="{{design.file_type}}">
+                                                    <br>
+                                                    <label>Input file</label>
+                                                    <input type="text" class="form-control" readonly value="{{design.o_s_gen}}">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Electrolysis</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Electrolyzer type</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Electrolyzer nominal power [MW]</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>System footprint [m²/MW]</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.elec_type}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.elec_size}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.sp_footprint}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <br>
+                                                <label>Min. electrolyzer efficiency before replacement [%]</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <br>
+                                                <label>Water Type</label>
+                                            </div>
+                                            <div class="col-md-4"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.eff_replacement}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.water_type}}">
+                                            </div>
+                                            <div class="col-md-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="economic_data" role="tabpanel">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>CAPEX</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Specific Electrolyzer and BoP cost [USD/kW]</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Specific Development cost [USD/kW]</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Installation cost [USD/kW]</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.elec_cost|number_format}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.develop_cost|number_format}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.installation_cost|number_format}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <br>
+                                                <label>Indirect costs [USD/project]</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <br>
+                                                <label>Total CAPEX [USD/kW]</label>
+                                            </div>
+                                            <div class="col-md-4"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.indirect_cost|number_format}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" readonly value="{{design.results.capex_tot|number_format}}">
+                                            </div>
+                                            <div class="col-md-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>OPEX</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Energy Costs [USD/MWh]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.energy_cost|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>O&M [USD/kW/year]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.om|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Water Costs [USD/m3]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.water_cost|number_format}}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Land cost [YSD/ha/year]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.land_cost|number_format}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Finance</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Equity discount rate [%]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.equity_discount_rate}}">
+                                                <br>
+                                                <label>Interest Rate [%]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.interest_rate}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Debt [%]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.debt}}">
+                                                <br>
+                                                <label>First Category Tax [%]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.first_category_tax}}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Debt term [years]</label>
+                                                <input type="text" class="form-control" readonly value="{{design.debt_term}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="downloads" role="tabpanel">
+                                <div class="card">
+                                        <div class="card-header">
+                                            <h5>Downloads</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <div class="btn-group mb-2 mr-2" id="pdf_shooter">
+                                                <a target="_blank" href="{% url 'design:resume' design.id %}"><button class="btn btn-outline-info" type="button">Download PDF</button></a>
+                                            </div>
+                                            <div class="btn-group mb-2 mr-2">
+                                                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download H2 Annual Data</button>
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{% url 'design:h2_annual_download' design.id 'excel'|slugify %}">.excel</a>
+                                                    <a class="dropdown-item" href="{% url 'design:h2_annual_download' design.id 'csv'|slugify %}">.csv</a>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group mb-2 mr-2">
+                                                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download H2 Hourly Data</button>
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{% url 'design:h2_hourly_download' design.id 'excel'|slugify %}">.excel</a>
+                                                    <a class="dropdown-item" href="{% url 'design:h2_hourly_download' design.id 'csv'|slugify %}">.csv</a>
+                                                </div>
+                                            </div>
+                                            {% if design.op_type == "PPA" %}
+                                            <div class="btn-group mb-2 mr-2">
+                                                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Energy Input Data</button>
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{% url 'design:energy_input_download' design.id 'excel'|slugify %}">.excel</a>
+                                                    <a class="dropdown-item" href="{% url 'design:energy_input_download' design.id 'csv'|slugify %}">.csv</a>
+                                                </div>
+                                            </div>  
+                                            {% endif %}
+                                            <div class="btn-group mb-2 mr-2">
+                                                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Water Consumption Data</button>
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{% url 'design:water_annual_download' design.id 'excel'|slugify %}">.excel</a>
+                                                    <a class="dropdown-item" href="{% url 'design:water_annual_download' design.id 'csv'|slugify %}">.csv</a>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group mb-2 mr-2">
+                                                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Project Annual Costs Data</button>
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{% url 'design:pac_download' design.id 'excel'|slugify %}">.excel</a>
+                                                    <a class="dropdown-item" href="{% url 'design:pac_download' design.id 'csv'|slugify %}">.csv</a>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group mb-2 mr-2">
+                                                <button class="btn btn-outline-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">LCOH Data</button>
+                                                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px,43px,0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item" href="{% url 'design:lcoh_down_data' design.id 'excel'|slugify %}">.excel</a>
+                                                    <a class="dropdown-item" href="{% url 'design:lcoh_down_data' design.id 'csv'|slugify %}">.csv</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="options" role="tabpanel">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <a class="col-md-4" href="{% url 'design:results' %}">
+                                                <button class="btn btn-outline-secondary col-md-12">Back</button>
+                                            </a>
+                                            <a class="col-md-4" href="{% url 'design:update' design.id %}">
+                                                <button class="btn btn-dark col-md-12">Update</button>
+                                            </a>
+                                        </div>
+                                    </div>                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- [ Main Content ] end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

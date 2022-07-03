@@ -1,0 +1,494 @@
+<form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-tabs" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active show" id="pills-technic-tab" data-toggle="pill" href="#pills-technic" role="tab" aria-controls="pills-technic" aria-selected="true">Technical specifications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-economic-tab" data-toggle="pill" href="#pills-economic" role="tab" aria-controls="pills-economic" aria-selected="false">Costs and financial inputs</a>
+                </li>
+                {% if 'update' in request.path %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'design:detail' design.id %}">Cancel</a>
+                </li>
+                <li class="nav-item">
+                    <input class="nav-link" type="submit" value="Update">
+                </li>  
+                {% else %}
+                <li class="nav-item">
+                    <input class="nav-link" type="submit" value="Simulate">
+                </li> 
+                {% endif %}
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade active show" id="pills-technic" role="tabpanel" aria-labelledby="pills-technic-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>General</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>{{form.project_name.label}}</label> <i class="feather icon-help-circle" title="You can put the name that you want but we suggest a functional one because this will be the name of the downloaded file"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.location.label}}</label> <i class="feather icon-help-circle" title="Write the city or the country of your project, this is just for reference and doesn’t have any implication in your results"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.cod.label}}</label> <i class="feather icon-help-circle" title="This is the year that your electrolyzer will start to degrade and will be used to calculate the year of change stack"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.horizon.label}}</label> <i class="feather icon-help-circle" title="Horizon of your project, is important for the technical and economics results"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{form.project_name}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.location}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.cod}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.horizon}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{form.project_name.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.location.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.cod.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.horizon.errors}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Energy supply</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>{{form.op_type.label}}</label> <i title="Select between Power purchase agreement (PPA) or your own generation vector" class="feather icon-help-circle"></i>
+                                    {{form.op_type}}
+                                    {{form.op_type.errors}}
+                                </div>
+                                <div id="ppa" class="col-md-3">
+                                    <label>{{form.ppa_type.label}}</label>
+                                    {{form.ppa_type}}
+                                    {{form.ppa_type.errors}}
+                                </div>
+                                <div id="customized" class="col-md-3">
+                                    <label>{{form.customized_from.label}}</label>
+                                    {{form.customized_from}}
+                                    {{form.customized_from.errors}}
+                                    <br>
+                                    <label>{{form.customized_to.label}}</label>
+                                    {{form.customized_to}}
+                                    {{form.customized_to.errors}}
+                                </div>
+                                <div id="user">
+                                    <div>
+                                        <label>{{form.file_type.label}}</label>
+                                        {{form.file_type}}
+                                        {{form.file_type.errors}}
+                                    </div>
+                                    <div>
+                                        <label>{{form.o_s_gen.label}}</label>
+                                        {{form.o_s_gen}}
+                                        {{form.o_s_gen.errors}}
+                                    </div>
+                                </div>
+                                <div class="col-md-3" id="nom_power">
+                                    <label>{{form.nom_power.label}}</label>
+                                    {{form.nom_power}}
+                                    {{form.nom_power.errors}}
+                                </div>
+                            </div>      
+                        </div>                               
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Electrolysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>{{form.elec_type.label}}</label> <i class="feather icon-help-circle" title="Select between Polymer electrolyte membrane (PEM) and Alkaline (ALK) electrolysis. A Specific energy consumption versus Power input graph will be available for your analysis. Solid oxide electrolyzer cell (SOEC) will be available soon"></i>
+                                    {{form.elec_type}}
+                                    {{form.elec_type.errors}}
+                                    <br>
+                                    <label>{{form.elec_size.label}}</label> <i class="feather icon-help-circle" title="Must be indicated by the manufacturing company and entered in MegaWatts (MW)"></i>
+                                    {{form.elec_size}}
+                                    {{form.elec_size.errors}}
+                                    <br>
+                                    <label>{{form.eff_replacement.label}}</label> <i class="feather icon-help-circle" title="Your electrolyzer will be replaced whe the effiency decrease to this point"></i>
+                                    {{form.eff_replacement}}
+                                    {{form.eff_replacement.errors}}
+                                    <br>
+                                    <label>{{form.water_type.label}}</label> <i class="feather icon-help-circle" title="Select between “Tap water”or “Demi water”, it depends on your own disponibility"></i>
+                                    {{form.water_type}}
+                                    {{form.water_type.errors}}
+                                    <br>
+                                    <label>{{form.sp_footprint.label}}</label>
+                                    {{form.sp_footprint}}
+                                    {{form.sp_footprint.errors}}
+                                    <br>
+                                </div>
+                                <div class="col-md-8">
+                                    <div id="pem_img">
+                                        <img class="mb-5" src="\static\assets\img\PEM.png" alt="PEM" style="width: 100%;">
+                                    </div>
+                                    <div id="alk_img">
+                                        <p>ALK ... pronto</p>
+                                    </div>
+                                    <div id="soec_img">
+                                        <p>SOEC ... pronto</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                               
+                    </div>
+                    <div class="card" id="pem_data">
+                        <div class="card-header">
+                            <h5>PEM</h5>
+                        </div>
+                        <div class="card-body">
+                            <h5>Cell Parameters</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Cell area [cm²]</label> <i class="feather icon-help-circle" title="Active area responsible for the conduction of protons, separation of product gases, and electrical insulation of the electrodes"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Thermoneutral voltage [V]</label> <i class="feather icon-help-circle" title="Voltage drop across the electrochemical cell"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Transfer coefficient alpha</label> <i class="feather icon-help-circle" title="Kinetic parameter employed in activation and concentration overpotential"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Limiting current density [A/cm²]</label> <i class="feather icon-help-circle" title="Maximum current density required to achieve the desired electrode reaction"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="680" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="1.481" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="0.5" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="6" disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Membrane thickness [cm]</label> <i class="feather icon-help-circle" title="Increase factor  on the ohmic protonic overpotential"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Membrane hydration parameter</label> <i class="feather icon-help-circle" title="Decrease factor on the ohmic protonic overpotential"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Roughness factor anode [cm²/cm²]</label> <i class="feather icon-help-circle" title="Physical property for anode involved in activation overpotential"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Roughness factor cathode[cm²/cm²]</label> <i class="feather icon-help-circle" title="Physical property for cathode involved in activation overpotential"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="0.0178" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="20" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="723" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="233" disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Anode exchange current density at the ref. T</label> <i class="feather icon-help-circle" title="Electrochemical property for anode involved in activation overpotential"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Cathode exchange current density at the ref. T</label> <i class="feather icon-help-circle" title="Electrochemical property for cathode involved in activation overpotential"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Reference Temperature [K]</label> <i class="feather icon-help-circle" title="Standar condition temperature"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Nominal operating temperature [K]</label> <i class="feather icon-help-circle" title="Electrolyzer working temperature"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="2.3e-7" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="0.001" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="298" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="353" disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Anode activation energy [J/mol]</label> <i class="feather icon-help-circle" title="Energy lost due to the slowness of electrochemical reactions"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <label>Cathode activation energy [J/mol]</label> <i class="feather icon-help-circle" title="Energy lost due to the slowness of electrochemical reactions"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="76000" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" value="4300" disabled>
+                                </div>
+                            </div>
+                            <br>
+                            <h5>Stack Parameters</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <img src="\static\assets\img\pem_func.png" alt=" Funcionamiento PEM" style="width: 100%;">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>Cells per stack</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Stack nominal power [kW/stack]</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Nominal pressure outlet [bar]</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="102" disabled>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="220" disabled>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="20" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <br>
+                                            <label>Auxiliary/BoP loads at nominal capacity [kW/stack]</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <br>
+                                            <label>Min. power input [%]</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <br>
+                                            <label>Operational Degradation [(degradation %)/(op.hour)]</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="40" disabled>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="10" disabled>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" value="3.3333e-06" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-economic" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>CAPEX</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>{{form.elec_cost.label}}</label> <i class="feather icon-help-circle" title="The sum of the specific cost of your electrolyzer and the balance of plant, i.e. the necessary components for the hydrogen production"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.develop_cost.label}}</label> <i class="feather icon-help-circle" title="Include the costs of the researching, growing and introducing your new project"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.installation_cost.label}}</label> <i class="feather icon-help-circle" title="Total cost of labor and materials for your start of production"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.indirect_cost.label}}</label> <i class="feather icon-help-circle" title="Any CAPEX cost not included before"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{form.elec_cost}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.develop_cost}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.installation_cost}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.indirect_cost}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{form.elec_cost.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.develop_cost.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.installation_cost.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.indirect_cost.errors}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <br>
+                                    <label>Total CAPEX [USD/kW]</label> <i class="feather icon-help-circle" title="This section shows the sum of your three previous inputs"></i>
+                                    <input class="form-control" type="text" id="total_capex" readonly>
+                                </div>
+                                <div class="col-md-6"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>OPEX</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>{{form.energy_cost.label}}</label> <i class="feather icon-help-circle" title="Cost of the electrical supply, it might come from a renewable or a fossil font"></i>
+                                    {{form.energy_cost}}
+                                    {{form.energy_cost.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.om.label}}</label> <i class="feather icon-help-circle" title="Operation and maintenance costs. If you don’t know this number you can suppose a 20% of the sum of the Specific Electrolyzer and BoP cost and Specific Development cost"></i>
+                                    {{form.om}}
+                                    {{form.om.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.water_cost.label}}</label> <i class="feather icon-help-circle" title="It depends if you will work with tap or demi water, and where do you get your water from. Countries can have different regulations for this item"></i>
+                                    {{form.water_cost}}
+                                    {{form.water_cost.errors}}
+                                </div>
+                                <div class="col-md-3">
+                                    <label>{{form.land_cost.label}}</label> <i class="feather icon-help-circle" title="Can be very variable but consider the magnitude of your project, the land of the plant and the corresponding administration"></i>
+                                    {{form.land_cost}}
+                                    {{form.land_cost.errors}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Finance</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>{{form.equity_discount_rate.label}}</label> <i class="feather icon-help-circle" title="Interest rate used in discounted cash flow analysis to determine the present value of future cash flows"></i>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>{{form.debt.label}}</label> <i class="feather icon-help-circle" title="Percentage of capital that is debt"></i>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>{{form.debt_term.label}}</label> <i class="feather icon-help-circle" title="Horizon of your debt"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{form.equity_discount_rate}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.debt}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.debt_term}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{form.equity_discount_rate.errors}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.debt.errors}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.debt_term.errors}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <br>
+                                    <label>{{form.interest_rate.label}}</label> <i class="feather icon-help-circle" title="Cost in percentage of your borrowing"></i>
+                                </div>
+                                <div class="col-md-4">
+                                    <br>
+                                    <label>{{form.first_category_tax.label}}</label> <i class="feather icon-help-circle" title="Basic tax on income of a legal entity domiciled or resident in Chile and engaged in commerce, mining, fishing, or industrial activities"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{form.interest_rate}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.first_category_tax}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{form.interest_rate.errors}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.first_category_tax.errors}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
